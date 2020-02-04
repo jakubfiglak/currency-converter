@@ -1,8 +1,7 @@
-import axios from 'axios';
-
 const endpoint = 'https://api.exchangeratesapi.io/latest';
 
-export default async function getRates() {
-  const res = await axios.get(endpoint);
-  console.log(res);
+export default async function getRatesByBase(base) {
+  const res = await fetch(`${endpoint}?base=${base}`);
+  const data = await res.json();
+  console.log(Object.keys(data.rates).sort());
 }

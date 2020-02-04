@@ -28,6 +28,7 @@
     border-radius: 3px;
     padding: 1rem;
     font-size: 2rem;
+    max-width: 250px;
 
     &:focus {
       outline-color: $primary-color;
