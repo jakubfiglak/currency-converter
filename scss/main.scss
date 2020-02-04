@@ -10,7 +10,7 @@
 
 .converter {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr 2fr;
   background: $dark-gray;
   grid-gap: 5rem;
   padding: 5rem;
@@ -27,8 +27,7 @@
     border: none;
     border-radius: 3px;
     padding: 1rem;
-    font-size: 2rem;
-    max-width: 250px;
+    font-size: 1.4rem;
 
     &:focus {
       outline-color: $primary-color;

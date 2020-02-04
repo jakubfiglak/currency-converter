@@ -1,4 +1,4 @@
-const currencies = {
+export const currencies = {
   USD: 'United States Dollar',
   AUD: 'Australian Dollar',
   BGN: 'Bulgarian Lev',
@@ -34,4 +34,10 @@ const currencies = {
   EUR: 'Euro',
 };
 
-export default currencies;
+export const generateOptions = () =>
+  Object.entries(currencies)
+    .map(
+      ([currencyCode, currencyName]) =>
+        `<option value="${currencyCode}">${currencyCode} - ${currencyName}</option>`
+    )
+    .join('');

@@ -1,5 +1,11 @@
 import getRates from './api';
-import currencies from './currencies';
+import { generateOptions } from './currencies';
+
+const fromSelect = document.querySelector('#from-currency');
+const toSelect = document.querySelector('#to-currency');
 
 getRates('PLN');
-console.log(Object.keys(currencies).sort());
+const html = generateOptions();
+console.log(html);
+fromSelect.innerHTML = html;
+toSelect.innerHTML = html;
