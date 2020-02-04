@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700|Zilla+Slab&display=swap");
+.btn {
+  border: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  padding: 1.4rem 2rem;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-primary {
+  background: linear-gradient(90deg, #f27a54 0%, #a154f2 100%);
+}
+.btn:hover {
+  opacity: 0.7;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Montserrat", sans-serif;
+  font-size: 10px;
+}
+
+body {
+  background: #30363d;
+  color: #cbcfd4;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Zilla Slab", serif;
+  text-align: center;
+  margin: 2rem 0 5rem;
+}
+
+h1 {
+  font-family: "Montserrat", sans-serif;
+  background: linear-gradient(90deg, #f27a54 0%, #a154f2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  font-size: 4.4rem;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 3.2rem;
+}
+
+h3 {
+  font-size: 2.4rem;
+}
+
+h4 {
+  font-size: 1.9rem;
+}
+
+h5 {
+  font-size: 1.7rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+p {
+  font-size: 1.4rem;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.converter {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  background: #3c444c;
+  grid-gap: 5rem;
+  padding: 5rem;
+  box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  max-width: 90%;
+}
+.converter input,
+.converter select,
+.converter p {
+  font-family: "Montserrat", sans-serif;
+  color: #30363d;
+  background: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 1rem;
+  font-size: 2rem;
+}
+.converter input:focus,
+.converter select:focus,
+.converter p:focus {
+  outline-color: #f27a54;
+}
+
+/*# sourceMappingURL=/main.77bb5cfd.css.map */

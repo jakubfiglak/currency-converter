@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700|Zilla+Slab&display=swap');
+
+// Colors
+$light-gray: #cbcfd4;
+$middle-gray: #747d88;
+$dark-gray: #3c444c;
+$dark-color: #30363d;
+$primary-color: #f27a54;
+$primary-color-transparent: rgba(242, 122, 84, 0.7);
+$secondary-color: #a154f2;
+$tertiary-color: #6fcf97;
+
+$primary-gradient: linear-gradient(
+  90deg,
+  $primary-color 0%,
+  $secondary-color 100%
+);
+
+// Fonts
+$primary-font: 'Montserrat', sans-serif;
+$secondary-font: 'Zilla Slab', serif;
