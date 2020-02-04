@@ -21,7 +21,6 @@ h4,
 h5 {
   font-family: $secondary-font;
   text-align: center;
-  margin: 2rem 0 5rem;
 }
 
 h1 {
@@ -32,6 +31,7 @@ h1 {
   text-transform: uppercase;
   font-size: 4.4rem;
   font-weight: bold;
+  margin-block-start: 2rem;
 }
 
 h2 {

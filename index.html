@@ -10,20 +10,30 @@
       crossorigin="anonymous"
     ></script>
     <script src="./js/index.js" defer></script>
-    <title>Currency Converter</title>
+    <title>Exchange Rates | Currency Converter</title>
   </head>
   <body>
     <h1>
-      Currency Converter
+      $$$ Money Counter $$$
     </h1>
     <div class="container">
-      <form class="converter">
+      <div class="exchange-rates content">
+        <h2>Recent rates</h2>
+        <select name="currency" id="currency"
+          ><option value="hello1"></option>
+          <option value="hello2"></option>
+          <option value="hello3"></option
+        ></select>
+        <p>Lorem ipsum dolor sit amet.</p>
+        <p>Lorem ipsum dolor sit amet.</p>
+        <p>Lorem ipsum dolor sit amet.</p>
+        <p>Lorem ipsum dolor sit amet.</p>
+      </div>
+      <form class="converter content">
         <input type="number" name="from-amount" id="amount-input" />
-        <select name="from-currency" id="from-currency">
-        </select>
-        <p id="amount-output" />$0</p>
-        <select name="to-currency" id="to-currency">
-        </select>
+        <select name="from-currency" id="from-currency"> </select>
+        <p id="amount-output"></p>
+        <select name="to-currency" id="to-currency"> </select>
       </form>
     </div>
   </body>
