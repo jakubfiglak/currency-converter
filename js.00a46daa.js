@@ -117,21 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"js/api.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = getRatesByBase;
-const endpoint = 'https://api.exchangeratesapi.io/latest';
-
-async function getRatesByBase(base) {
-  const res = await fetch(`${endpoint}?base=${base}`);
-  const data = await res.json();
-  console.log(Object.keys(data.rates).sort());
-}
-},{}],"js/currencies.js":[function(require,module,exports) {
+})({"js/currencies.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -178,12 +164,55 @@ exports.currencies = currencies;
 const generateOptions = () => Object.entries(currencies).map(([currencyCode, currencyName]) => `<option value="${currencyCode}">${currencyCode} - ${currencyName}</option>`).join('');
 
 exports.generateOptions = generateOptions;
-},{}],"js/index.js":[function(require,module,exports) {
+},{}],"js/api.js":[function(require,module,exports) {
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getRatesByBase;
+const endpoint = 'https://api.exchangeratesapi.io/latest';
+
+async function getRatesByBase(base) {
+  const res = await fetch(`${endpoint}?base=${base}`);
+  const rates = await res.json();
+  return rates;
+}
+},{}],"js/convert.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = convert;
 
 var _api = _interopRequireDefault(require("./api"));
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const ratesByBase = {};
+
+async function convert(amount, from, to) {
+  if (!ratesByBase[from]) {
+    console.log(`we don't have rates for this currency, I have to fetch it!`);
+    const rates = await (0, _api.default)(from);
+    ratesByBase[from] = rates;
+    console.log(ratesByBase);
+  }
+
+  const rate = ratesByBase[from].rates[to];
+  const converted = amount * rate;
+  console.log(`${amount} in ${from} is ${converted} in ${to}`);
+  return amount * rate;
+}
+},{"./api":"js/api.js"}],"js/index.js":[function(require,module,exports) {
+"use strict";
+
 var _currencies = require("./currencies");
+
+var _api = _interopRequireDefault(require("./api"));
+
+var _convert = _interopRequireDefault(require("./convert"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -191,10 +220,11 @@ const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
 (0, _api.default)('PLN');
 const html = (0, _currencies.generateOptions)();
-console.log(html);
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
-},{"./api":"js/api.js","./currencies":"js/currencies.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+(0, _convert.default)(100, 'PLN', 'USD');
+(0, _convert.default)(100, 'USD', 'EUR');
+},{"./currencies":"js/currencies.js","./api":"js/api.js","./convert":"js/convert.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
