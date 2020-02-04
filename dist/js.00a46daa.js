@@ -218,12 +218,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
+const amountInput = document.querySelector('#amount-input');
+const amountOutput = document.querySelector('#amount-output');
+const form = document.querySelector('.converter');
 (0, _api.default)('PLN');
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
-toSelect.innerHTML = html;
-(0, _convert.default)(100, 'PLN', 'USD');
-(0, _convert.default)(100, 'USD', 'EUR');
+toSelect.innerHTML = html; // convert(100, 'PLN', 'USD');
+// convert(100, 'USD', 'EUR');
+
+form.addEventListener('input', async () => {
+  const value = await (0, _convert.default)(amountInput.value, fromSelect.value, toSelect.value);
+  amountOutput.innerHTML = `${toSelect.value} ${value}`;
+});
 },{"./currencies":"js/currencies.js","./api":"js/api.js","./convert":"js/convert.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
