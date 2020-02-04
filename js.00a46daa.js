@@ -123,7 +123,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.generateOptions = exports.currencies = void 0;
+exports.formatCurrency = exports.generateOptions = void 0;
 const currencies = {
   USD: 'United States Dollar',
   AUD: 'Australian Dollar',
@@ -159,11 +159,17 @@ const currencies = {
   ZAR: 'South African Rand',
   EUR: 'Euro'
 };
-exports.currencies = currencies;
 
 const generateOptions = () => Object.entries(currencies).map(([currencyCode, currencyName]) => `<option value="${currencyCode}">${currencyCode} - ${currencyName}</option>`).join('');
 
 exports.generateOptions = generateOptions;
+
+const formatCurrency = (amount, currency) => Intl.NumberFormat('en-EN', {
+  style: 'currency',
+  currency
+}).format(amount);
+
+exports.formatCurrency = formatCurrency;
 },{}],"js/api.js":[function(require,module,exports) {
 "use strict";
 
@@ -224,13 +230,16 @@ const form = document.querySelector('.converter');
 (0, _api.default)('PLN');
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
-toSelect.innerHTML = html; // convert(100, 'PLN', 'USD');
-// convert(100, 'USD', 'EUR');
+toSelect.innerHTML = html;
 
-form.addEventListener('input', async () => {
+const displayData = async () => {
   const value = await (0, _convert.default)(amountInput.value, fromSelect.value, toSelect.value);
-  amountOutput.innerHTML = `${toSelect.value} ${value}`;
-});
+  const formatted = (0, _currencies.formatCurrency)(value, toSelect.value);
+  console.log(formatted);
+  amountOutput.textContent = `${formatted}`;
+};
+
+form.addEventListener('input', displayData);
 },{"./currencies":"js/currencies.js","./api":"js/api.js","./convert":"js/convert.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
