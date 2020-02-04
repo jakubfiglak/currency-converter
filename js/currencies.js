@@ -1,4 +1,4 @@
-export const currencies = {
+const currencies = {
   USD: 'United States Dollar',
   AUD: 'Australian Dollar',
   BGN: 'Bulgarian Lev',
@@ -41,3 +41,9 @@ export const generateOptions = () =>
         `<option value="${currencyCode}">${currencyCode} - ${currencyName}</option>`
     )
     .join('');
+
+export const formatCurrency = (amount, currency) =>
+  Intl.NumberFormat('en-EN', {
+    style: 'currency',
+    currency,
+  }).format(amount);

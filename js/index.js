@@ -1,4 +1,4 @@
-import { generateOptions } from './currencies';
+import { generateOptions, formatCurrency } from './currencies';
 import getRatesByBase from './api';
 import convert from './convert';
 
@@ -13,14 +13,15 @@ const html = generateOptions();
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
 
-// convert(100, 'PLN', 'USD');
-// convert(100, 'USD', 'EUR');
-
-form.addEventListener('input', async () => {
+const displayData = async () => {
   const value = await convert(
     amountInput.value,
     fromSelect.value,
     toSelect.value
   );
-  amountOutput.innerHTML = `${toSelect.value} ${value}`;
-});
+  const formatted = formatCurrency(value, toSelect.value);
+  console.log(formatted);
+  amountOutput.textContent = `${formatted}`;
+};
+
+form.addEventListener('input', displayData);
