@@ -176,13 +176,44 @@ exports.formatCurrency = formatCurrency;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = getRatesByBase;
-const endpoint = 'https://api.exchangeratesapi.io/latest';
+exports.getRatesByBase = getRatesByBase;
+exports.getRatesToCalculate = getRatesToCalculate;
+const endpoint = 'https://api.exchangeratesapi.io';
 
 async function getRatesByBase(base) {
-  const res = await fetch(`${endpoint}?base=${base}`);
-  const rates = await res.json();
-  return rates;
+  try {
+    const res = await fetch(`${endpoint}/latest?base=${base}`);
+    const rates = await res.json();
+    return rates;
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function getRatesToCalculate(base, daysFromNow) {
+  if (!daysFromNow) {
+    try {
+      const res = await fetch(`${endpoint}/latest?base=${base}&symbols=USD,GBP,EUR,CHF`);
+      const rates = await res.json(); // console.log(rates);
+
+      return rates;
+    } catch (err) {
+      alert(err.message);
+    }
+  } else if (daysFromNow > 0) {
+    const today = new Date();
+    const dayInThePast = new Date(today.setDate(today.getDate() - daysFromNow));
+    const queryString = Array.from(dayInThePast.toISOString()).splice(0, 10).join('');
+
+    try {
+      const res = await fetch(`${endpoint}/${queryString}?base=${base}&symbols=USD,GBP,EUR,CHF`);
+      const rates = await res.json(); // console.log(rates);
+
+      return rates;
+    } catch (err) {
+      alert(err.message);
+    }
+  }
 }
 },{}],"js/convert.js":[function(require,module,exports) {
 "use strict";
@@ -192,16 +223,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = convert;
 
-var _api = _interopRequireDefault(require("./api"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _api = require("./api");
 
 const ratesByBase = {};
 
 async function convert(amount, from, to) {
   if (!ratesByBase[from]) {
     console.log(`we don't have rates for this currency, I have to fetch it!`);
-    const rates = await (0, _api.default)(from);
+    const rates = await (0, _api.getRatesByBase)(from);
     ratesByBase[from] = rates;
     console.log(ratesByBase);
   }
@@ -211,14 +240,50 @@ async function convert(amount, from, to) {
   console.log(`${amount} in ${from} is ${converted} in ${to}`);
   return amount * rate;
 }
-},{"./api":"js/api.js"}],"js/index.js":[function(require,module,exports) {
+},{"./api":"js/api.js"}],"js/calculateRates.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = calculate;
+
+var _api = require("./api");
+
+async function calculate(from) {
+  const todayData = await (0, _api.getRatesToCalculate)(from);
+  const yesterdayData = await (0, _api.getRatesToCalculate)(from, 1);
+  const rateRatio = {};
+  Object.keys(todayData.rates).forEach(currency => rateRatio[currency] = (todayData.rates[currency] - yesterdayData.rates[currency]) / yesterdayData.rates[currency]);
+  console.log(rateRatio);
+  return rateRatio;
+}
+},{"./api":"js/api.js"}],"js/helpers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.convertPercent = convertPercent;
+
+function convertPercent(decimal) {
+  return Intl.NumberFormat('en-EN', {
+    style: 'percent',
+    minimumFractionDigits: 2
+  }).format(decimal);
+}
+},{}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _currencies = require("./currencies");
 
-var _api = _interopRequireDefault(require("./api"));
+var _api = require("./api");
 
 var _convert = _interopRequireDefault(require("./convert"));
+
+var _calculateRates = _interopRequireDefault(require("./calculateRates"));
+
+var _helpers = require("./helpers");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -227,8 +292,12 @@ const toSelect = document.querySelector('#to-currency');
 const ratesSelect = document.querySelector('#currency');
 const amountInput = document.querySelector('#amount-input');
 const amountOutput = document.querySelector('#amount-output');
-const form = document.querySelector('.converter');
-(0, _api.default)('PLN');
+const form = document.querySelector('.converter'); // getRatesByBase('PLN');
+// getRatesToCalculate('PLN', 1);
+
+(0, _calculateRates.default)('PLN');
+const percent = (0, _helpers.convertPercent)(0.007576);
+console.log(percent);
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
@@ -242,7 +311,7 @@ const displayData = async () => {
 };
 
 form.addEventListener('input', displayData);
-},{"./currencies":"js/currencies.js","./api":"js/api.js","./convert":"js/convert.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./currencies":"js/currencies.js","./api":"js/api.js","./convert":"js/convert.js","./calculateRates":"js/calculateRates.js","./helpers":"js/helpers.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
