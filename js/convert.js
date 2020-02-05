@@ -1,4 +1,4 @@
-import getRatesByBase from './api';
+import { getRatesByBase } from './api';
 
 const ratesByBase = {};
 
