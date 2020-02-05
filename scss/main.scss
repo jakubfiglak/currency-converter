@@ -25,9 +25,36 @@
     font-size: 1.4rem;
     list-style: none;
 
-    li {
+    .list-item {
+      display: grid;
+      grid-template-areas:
+        'today diff'
+        'yesterday diff';
+      grid-gap: 1rem;
+      align-items: center;
       padding: 1rem;
-      border-bottom: 1px solid $light-gray;
+      border-block-end: 1px solid $light-gray;
+
+      &:last-child {
+        border: none;
+      }
+
+      .today {
+        grid-area: today;
+      }
+
+      .diff {
+        grid-area: diff;
+        font-size: 1.8rem;
+      }
+
+      .plus {
+        color: $tertiary-color;
+      }
+
+      .yesterday {
+        grid-area: yesterday;
+      }
     }
   }
 }

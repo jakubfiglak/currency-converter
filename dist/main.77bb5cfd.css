@@ -102,9 +102,29 @@ p {
   font-size: 1.4rem;
   list-style: none;
 }
-.exchange-rates .rates-list li {
+.exchange-rates .rates-list .list-item {
+  display: grid;
+  grid-template-areas: "today diff" "yesterday diff";
+  grid-gap: 1rem;
+  align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #cbcfd4;
+  border-block-end: 1px solid #cbcfd4;
+}
+.exchange-rates .rates-list .list-item:last-child {
+  border: none;
+}
+.exchange-rates .rates-list .list-item .today {
+  grid-area: today;
+}
+.exchange-rates .rates-list .list-item .diff {
+  grid-area: diff;
+  font-size: 1.8rem;
+}
+.exchange-rates .rates-list .list-item .plus {
+  color: #6fcf97;
+}
+.exchange-rates .rates-list .list-item .yesterday {
+  grid-area: yesterday;
 }
 
 .converter {
