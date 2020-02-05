@@ -5,38 +5,70 @@
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
   background: $dark-gray;
-  grid-gap: 3rem;
-  padding: 5rem;
+  padding: 2rem 5rem;
   box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   max-width: 90%;
   margin-block-start: 3rem;
+}
 
-  input,
-  select,
-  p {
-    font-family: $primary-font;
-    color: $dark-color;
-    background: #fff;
-    border: none;
-    border-radius: 3px;
-    padding: 1rem;
+.exchange-rates {
+  display: grid;
+  grid-gap: 2rem;
+
+  .rates-list {
     font-size: 1.4rem;
+    list-style: none;
 
-    &:focus {
-      outline-color: $primary-color;
+    li {
+      padding: 1rem;
+      border-bottom: 1px solid $light-gray;
     }
   }
 }
 
-.exchange-rates {
+.converter {
+  display: grid;
   grid-template-columns: 1fr;
+  grid-gap: 2rem;
+  margin-block-start: 2rem;
+
+  .input,
+  .output {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 2rem;
+
+    @media screen and (max-width: 740px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .arrows {
+    text-align: center;
+
+    .fa-exchange-alt {
+      color: $primary-color;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+.field {
+  font-family: $primary-font;
+  color: $dark-color;
+  background: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 1rem;
+  font-size: 1.4rem;
+
+  &:focus {
+    outline-color: $primary-color;
+  }
 }

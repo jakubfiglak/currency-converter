@@ -4,6 +4,7 @@ import convert from './convert';
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
+const ratesSelect = document.querySelector('#currency');
 const amountInput = document.querySelector('#amount-input');
 const amountOutput = document.querySelector('#amount-output');
 const form = document.querySelector('.converter');
@@ -12,6 +13,7 @@ getRatesByBase('PLN');
 const html = generateOptions();
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
+ratesSelect.innerHTML = html;
 
 const displayData = async () => {
   const value = await convert(

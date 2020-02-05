@@ -82,24 +82,58 @@ p {
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
   background: #3c444c;
-  grid-gap: 3rem;
-  padding: 5rem;
+  padding: 2rem 5rem;
   box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   max-width: 90%;
   margin-block-start: 3rem;
 }
-.content input,
-.content select,
-.content p {
+
+.exchange-rates {
+  display: grid;
+  grid-gap: 2rem;
+}
+.exchange-rates .rates-list {
+  font-size: 1.4rem;
+  list-style: none;
+}
+.exchange-rates .rates-list li {
+  padding: 1rem;
+  border-bottom: 1px solid #cbcfd4;
+}
+
+.converter {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 2rem;
+  margin-block-start: 2rem;
+}
+.converter .input,
+.converter .output {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 2rem;
+}
+@media screen and (max-width: 740px) {
+  .converter .input,
+.converter .output {
+    grid-template-columns: 1fr;
+  }
+}
+.converter .arrows {
+  text-align: center;
+}
+.converter .arrows .fa-exchange-alt {
+  color: #f27a54;
+  transform: rotate(90deg);
+}
+
+.field {
   font-family: "Montserrat", sans-serif;
   color: #30363d;
   background: #fff;
@@ -108,14 +142,8 @@ p {
   padding: 1rem;
   font-size: 1.4rem;
 }
-.content input:focus,
-.content select:focus,
-.content p:focus {
+.field:focus {
   outline-color: #f27a54;
-}
-
-.exchange-rates {
-  grid-template-columns: 1fr;
 }
 
 /*# sourceMappingURL=/main.77bb5cfd.css.map */
