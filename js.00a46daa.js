@@ -224,6 +224,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
+const ratesSelect = document.querySelector('#currency');
 const amountInput = document.querySelector('#amount-input');
 const amountOutput = document.querySelector('#amount-output');
 const form = document.querySelector('.converter');
@@ -231,6 +232,7 @@ const form = document.querySelector('.converter');
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
+ratesSelect.innerHTML = html;
 
 const displayData = async () => {
   const value = await (0, _convert.default)(amountInput.value, fromSelect.value, toSelect.value);
@@ -268,7 +270,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63468" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64399" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -16,20 +16,32 @@
     <div class="container">
       <div class="exchange-rates content">
         <h2>Recent rates</h2>
-        <select name="currency" id="currency"><option value="hello1"></option>
+        <select name="currency" id="currency" class="field"><option value="hello1"></option>
           <option value="hello2"></option>
           <option value="hello3"></option></select>
-        <p>Lorem ipsum dolor sit amet.</p>
-        <p>Lorem ipsum dolor sit amet.</p>
-        <p>Lorem ipsum dolor sit amet.</p>
-        <p>Lorem ipsum dolor sit amet.</p>
+        <ul class="rates-list">
+          <li>1 PLN = 0.5 EUR <span>+0,5%</span></li>
+          <li>1 PLN = 0.43556 USD <span>+0,5%</span></li>
+          <li>1 PLN = 0.7746 GBP <span>+0,5%</span></li>
+          <li>1 PLN = 1.2567 CHF <span>+0,5%</span></li>
+        </ul>
       </div>
-      <form class="converter content">
-        <input type="number" name="from-amount" id="amount-input">
-        <select name="from-currency" id="from-currency"> </select>
-        <p id="amount-output"></p>
-        <select name="to-currency" id="to-currency"> </select>
-      </form>
+      <div class="content">
+        <h2>Convert currencies</h2>
+        <form class="converter" autocomplete="off">
+          <div class="input">
+            <input type="number" min="0" name="from-amount" id="amount-input" class="field">
+            <select name="from-currency" id="from-currency" class="field">
+            </select>
+          </div>
+
+          <div class="arrows"><i class="fas fa-exchange-alt fa-3x"></i></div>
+          <div class="output">
+            <p id="amount-output" class="field">$0</p>
+            <select name="to-currency" id="to-currency" class="field"> </select>
+          </div>
+        </form>
+      </div>
     </div>
   </body>
 </html>
