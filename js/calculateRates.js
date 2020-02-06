@@ -9,8 +9,6 @@ export default async function calculate(from) {
     const todayData = await getRatesToCalculate(from);
     const yesterdayData = await getRatesToCalculate(from, 1);
 
-    console.log(ratesToCalculate[from]);
-
     ratesToCalculate[from].today = todayData;
     ratesToCalculate[from].yesterday = yesterdayData;
 
@@ -23,7 +21,6 @@ export default async function calculate(from) {
     );
 
     ratesToCalculate[from].ratio = rateRatio;
-    console.log(ratesToCalculate);
   }
   return ratesToCalculate;
 }

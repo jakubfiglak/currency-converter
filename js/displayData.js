@@ -8,6 +8,7 @@ const amountOutput = document.querySelector('#amount-output');
 const toSelect = document.querySelector('#to-currency');
 const fromSelect = document.querySelector('#from-currency');
 const ratesList = document.querySelector('#rates-list');
+
 export const rateSelect = document.querySelector('#currency');
 
 export const displayConversion = async () => {
@@ -17,7 +18,6 @@ export const displayConversion = async () => {
     toSelect.value
   );
   const formatted = formatCurrency(value, toSelect.value);
-  console.log(formatted);
   amountOutput.textContent = `${formatted}`;
 };
 
@@ -25,14 +25,7 @@ export const displayRates = async () => {
   const currency = rateSelect.value;
   const rates = await calculate(currency);
 
-  console.log(rates);
-
   const { today, yesterday, ratio } = rates[currency];
-  //   const { yesterday } = rates[currency];
-  //   const { ratio } = rates[currency];
-  //   console.log(today);
-  //   console.log(yesterday);
-  console.log(ratio);
 
   const todayFormatted = Object.keys(today.rates).map(curr =>
     formatCurrency(today.rates[curr] * 100, curr)
@@ -43,18 +36,9 @@ export const displayRates = async () => {
   const ratioFormatted = Object.keys(ratio).map(rate =>
     convertPercent(ratio[rate])
   );
-
   const classes = Object.keys(ratio).map(rate =>
     ratio[rate] >= 0 ? 'plus' : 'minus'
   );
-
-  console.log(classes);
-
-  console.log(todayFormatted);
-  console.log(yesterdayFormatted);
-  console.log(ratioFormatted);
-
-  //   console.log(today);
 
   const html = todayFormatted
     .map(

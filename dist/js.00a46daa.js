@@ -232,13 +232,11 @@ async function calculate(from) {
     ratesToCalculate[from] = {};
     const todayData = await (0, _api.getRatesToCalculate)(from);
     const yesterdayData = await (0, _api.getRatesToCalculate)(from, 1);
-    console.log(ratesToCalculate[from]);
     ratesToCalculate[from].today = todayData;
     ratesToCalculate[from].yesterday = yesterdayData;
     const rateRatio = {};
     Object.keys(todayData.rates).forEach(currency => rateRatio[currency] = (todayData.rates[currency] - yesterdayData.rates[currency]) / yesterdayData.rates[currency]);
     ratesToCalculate[from].ratio = rateRatio;
-    console.log(ratesToCalculate);
   }
 
   return ratesToCalculate;
@@ -271,15 +269,11 @@ const ratesByBase = {};
 
 async function convert(amount, from, to) {
   if (!ratesByBase[from]) {
-    console.log(`we don't have rates for this currency, I have to fetch it!`);
     const rates = await (0, _api.getRatesByBase)(from);
     ratesByBase[from] = rates;
-    console.log(ratesByBase);
   }
 
   const rate = ratesByBase[from].rates[to];
-  const converted = amount * rate;
-  console.log(`${amount} in ${from} is ${converted} in ${to}`);
   return amount * rate;
 }
 },{"./api":"js/api.js"}],"js/displayData.js":[function(require,module,exports) {
@@ -311,7 +305,6 @@ exports.rateSelect = rateSelect;
 const displayConversion = async () => {
   const value = await (0, _convert.default)(amountInput.value, fromSelect.value, toSelect.value);
   const formatted = (0, _currencies.formatCurrency)(value, toSelect.value);
-  console.log(formatted);
   amountOutput.textContent = `${formatted}`;
 };
 
@@ -320,26 +313,15 @@ exports.displayConversion = displayConversion;
 const displayRates = async () => {
   const currency = rateSelect.value;
   const rates = await (0, _calculateRates.default)(currency);
-  console.log(rates);
   const {
     today,
     yesterday,
     ratio
-  } = rates[currency]; //   const { yesterday } = rates[currency];
-  //   const { ratio } = rates[currency];
-  //   console.log(today);
-  //   console.log(yesterday);
-
-  console.log(ratio);
+  } = rates[currency];
   const todayFormatted = Object.keys(today.rates).map(curr => (0, _currencies.formatCurrency)(today.rates[curr] * 100, curr));
   const yesterdayFormatted = Object.keys(yesterday.rates).map(curr => (0, _currencies.formatCurrency)(yesterday.rates[curr] * 100, curr));
   const ratioFormatted = Object.keys(ratio).map(rate => (0, _helpers.convertPercent)(ratio[rate]));
   const classes = Object.keys(ratio).map(rate => ratio[rate] >= 0 ? 'plus' : 'minus');
-  console.log(classes);
-  console.log(todayFormatted);
-  console.log(yesterdayFormatted);
-  console.log(ratioFormatted); //   console.log(today);
-
   const html = todayFormatted.map((el, idx) => `
     <li class="list-item">
       <p class="today">${today.date}: 100 ${today.base} = ${el}</p>
