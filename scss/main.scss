@@ -30,7 +30,7 @@
       grid-template-areas:
         'today diff'
         'yesterday diff';
-      grid-gap: 1rem;
+      grid-gap: 1rem 4rem;
       align-items: center;
       padding: 1rem;
       border-block-end: 1px solid $light-gray;
@@ -46,10 +46,15 @@
       .diff {
         grid-area: diff;
         font-size: 1.8rem;
+        justify-self: end;
       }
 
       .plus {
         color: $tertiary-color;
+      }
+
+      .minus {
+        color: $primary-color;
       }
 
       .yesterday {
