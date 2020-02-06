@@ -215,6 +215,48 @@ async function getRatesToCalculate(base, daysFromNow) {
     }
   }
 }
+},{}],"js/calculateRates.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = calculate;
+
+var _api = require("./api");
+
+const ratesToCalculate = {};
+
+async function calculate(from) {
+  if (!ratesToCalculate[from]) {
+    ratesToCalculate[from] = {};
+    const todayData = await (0, _api.getRatesToCalculate)(from);
+    const yesterdayData = await (0, _api.getRatesToCalculate)(from, 1);
+    console.log(ratesToCalculate[from]);
+    ratesToCalculate[from].today = todayData;
+    ratesToCalculate[from].yesterday = yesterdayData;
+    const rateRatio = {};
+    Object.keys(todayData.rates).forEach(currency => rateRatio[currency] = (todayData.rates[currency] - yesterdayData.rates[currency]) / yesterdayData.rates[currency]);
+    ratesToCalculate[from].ratio = rateRatio;
+    console.log(ratesToCalculate);
+  }
+
+  return ratesToCalculate;
+}
+},{"./api":"js/api.js"}],"js/helpers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.convertPercent = convertPercent;
+
+function convertPercent(decimal) {
+  return Intl.NumberFormat('en-EN', {
+    style: 'percent',
+    minimumFractionDigits: 2
+  }).format(decimal);
+}
 },{}],"js/convert.js":[function(require,module,exports) {
 "use strict";
 
@@ -240,46 +282,17 @@ async function convert(amount, from, to) {
   console.log(`${amount} in ${from} is ${converted} in ${to}`);
   return amount * rate;
 }
-},{"./api":"js/api.js"}],"js/calculateRates.js":[function(require,module,exports) {
+},{"./api":"js/api.js"}],"js/displayData.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = calculate;
-
-var _api = require("./api");
-
-async function calculate(from) {
-  const todayData = await (0, _api.getRatesToCalculate)(from);
-  const yesterdayData = await (0, _api.getRatesToCalculate)(from, 1);
-  const rateRatio = {};
-  Object.keys(todayData.rates).forEach(currency => rateRatio[currency] = (todayData.rates[currency] - yesterdayData.rates[currency]) / yesterdayData.rates[currency]);
-  console.log(rateRatio);
-  return rateRatio;
-}
-},{"./api":"js/api.js"}],"js/helpers.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.convertPercent = convertPercent;
-
-function convertPercent(decimal) {
-  return Intl.NumberFormat('en-EN', {
-    style: 'percent',
-    minimumFractionDigits: 2
-  }).format(decimal);
-}
-},{}],"js/index.js":[function(require,module,exports) {
-"use strict";
-
-var _currencies = require("./currencies");
-
-var _api = require("./api");
+exports.displayRates = exports.displayConversion = exports.rateSelect = void 0;
 
 var _convert = _interopRequireDefault(require("./convert"));
+
+var _currencies = require("./currencies");
 
 var _calculateRates = _interopRequireDefault(require("./calculateRates"));
 
@@ -287,31 +300,88 @@ var _helpers = require("./helpers");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const fromSelect = document.querySelector('#from-currency');
-const toSelect = document.querySelector('#to-currency');
-const ratesSelect = document.querySelector('#currency');
 const amountInput = document.querySelector('#amount-input');
 const amountOutput = document.querySelector('#amount-output');
-const form = document.querySelector('.converter'); // getRatesByBase('PLN');
-// getRatesToCalculate('PLN', 1);
+const toSelect = document.querySelector('#to-currency');
+const fromSelect = document.querySelector('#from-currency');
+const ratesList = document.querySelector('#rates-list');
+const rateSelect = document.querySelector('#currency');
+exports.rateSelect = rateSelect;
 
-(0, _calculateRates.default)('PLN');
-const percent = (0, _helpers.convertPercent)(0.007576);
-console.log(percent);
-const html = (0, _currencies.generateOptions)();
-fromSelect.innerHTML = html;
-toSelect.innerHTML = html;
-ratesSelect.innerHTML = html;
-
-const displayData = async () => {
+const displayConversion = async () => {
   const value = await (0, _convert.default)(amountInput.value, fromSelect.value, toSelect.value);
   const formatted = (0, _currencies.formatCurrency)(value, toSelect.value);
   console.log(formatted);
   amountOutput.textContent = `${formatted}`;
 };
 
-form.addEventListener('input', displayData);
-},{"./currencies":"js/currencies.js","./api":"js/api.js","./convert":"js/convert.js","./calculateRates":"js/calculateRates.js","./helpers":"js/helpers.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+exports.displayConversion = displayConversion;
+
+const displayRates = async () => {
+  const currency = rateSelect.value;
+  const rates = await (0, _calculateRates.default)(currency);
+  console.log(rates);
+  const {
+    today,
+    yesterday,
+    ratio
+  } = rates[currency]; //   const { yesterday } = rates[currency];
+  //   const { ratio } = rates[currency];
+  //   console.log(today);
+  //   console.log(yesterday);
+
+  console.log(ratio);
+  const todayFormatted = Object.keys(today.rates).map(curr => (0, _currencies.formatCurrency)(today.rates[curr], curr));
+  const yesterdayFormatted = Object.keys(yesterday.rates).map(curr => (0, _currencies.formatCurrency)(yesterday.rates[curr], curr));
+  const ratioFormatted = Object.keys(ratio).map(rate => (0, _helpers.convertPercent)(ratio[rate]));
+  console.log(todayFormatted);
+  console.log(yesterdayFormatted);
+  console.log(ratioFormatted); //   console.log(today);
+
+  const html = todayFormatted.map((el, idx) => `
+    <li class="list-item">
+      <p class="today">${today.date}: 1 ${today.base} = ${el}</p>
+       <p class="diff plus">${ratioFormatted[idx]}</p>
+      <p class="yesterday">${yesterday.date}: 1 ${yesterday.base} = ${yesterdayFormatted[idx]}</p>
+  </li>
+    `).join('');
+  console.log(html);
+  ratesList.innerHTML = html;
+};
+
+exports.displayRates = displayRates;
+},{"./convert":"js/convert.js","./currencies":"js/currencies.js","./calculateRates":"js/calculateRates.js","./helpers":"js/helpers.js"}],"js/index.js":[function(require,module,exports) {
+"use strict";
+
+var _currencies = require("./currencies");
+
+var _calculateRates = _interopRequireDefault(require("./calculateRates"));
+
+var _helpers = require("./helpers");
+
+var _displayData = require("./displayData");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const fromSelect = document.querySelector('#from-currency');
+const toSelect = document.querySelector('#to-currency');
+const ratesSelect = document.querySelector('#currency');
+const form = document.querySelector('.converter'); // getRatesByBase('PLN');
+// getRatesToCalculate('PLN', 1);
+// calculate('PLN', 1);
+// calculate('PLN', 1);
+// calculate('USD', 1);
+// const percent = convertPercent(0.007576);
+// console.log(percent);
+
+const html = (0, _currencies.generateOptions)();
+fromSelect.innerHTML = html;
+toSelect.innerHTML = html;
+ratesSelect.innerHTML = html;
+form.addEventListener('input', _displayData.displayConversion);
+
+_displayData.rateSelect.addEventListener('change', _displayData.displayRates);
+},{"./currencies":"js/currencies.js","./calculateRates":"js/calculateRates.js","./helpers":"js/helpers.js","./displayData":"js/displayData.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -339,7 +409,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64399" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60364" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
