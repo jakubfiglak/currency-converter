@@ -29,6 +29,11 @@ html {
   font-family: "Montserrat", sans-serif;
   font-size: 10px;
 }
+@media screen and (max-width: 376px) {
+  html {
+    font-size: 8px;
+  }
+}
 
 body {
   background: #30363d;
@@ -110,6 +115,11 @@ p {
   padding: 1rem;
   border-block-end: 1px solid #cbcfd4;
 }
+@media screen and (max-width: 450px) {
+  .exchange-rates .rates-list .list-item {
+    grid-template-areas: "today" "yesterday" "diff";
+  }
+}
 .exchange-rates .rates-list .list-item:last-child {
   border: none;
 }
@@ -120,6 +130,11 @@ p {
   grid-area: diff;
   font-size: 1.8rem;
   justify-self: end;
+}
+@media screen and (max-width: 450px) {
+  .exchange-rates .rates-list .list-item .diff {
+    justify-self: start;
+  }
 }
 .exchange-rates .rates-list .list-item .plus {
   color: #6fcf97;
@@ -152,9 +167,8 @@ p {
 .converter .arrows {
   text-align: center;
 }
-.converter .arrows .fa-exchange-alt {
+.converter .arrows .fa-arrow-alt-circle-down {
   color: #f27a54;
-  transform: rotate(90deg);
 }
 
 .field {
