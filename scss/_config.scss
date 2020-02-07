@@ -7,6 +7,10 @@
 html {
   font-family: $primary-font;
   font-size: 10px;
+
+  @media screen and (max-width: 376px) {
+    font-size: 8px;
+  }
 }
 
 body {

@@ -35,6 +35,13 @@
       padding: 1rem;
       border-block-end: 1px solid $light-gray;
 
+      @media screen and (max-width: 450px) {
+        grid-template-areas:
+          'today'
+          'yesterday'
+          'diff';
+      }
+
       &:last-child {
         border: none;
       }
@@ -47,6 +54,10 @@
         grid-area: diff;
         font-size: 1.8rem;
         justify-self: end;
+
+        @media screen and (max-width: 450px) {
+          justify-self: start;
+        }
       }
 
       .plus {
@@ -84,9 +95,8 @@
   .arrows {
     text-align: center;
 
-    .fa-exchange-alt {
+    .fa-arrow-alt-circle-down {
       color: $primary-color;
-      transform: rotate(90deg);
     }
   }
 }
