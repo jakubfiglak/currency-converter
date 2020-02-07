@@ -10,31 +10,23 @@ export async function getRatesByBase(base) {
   }
 }
 
-export async function getRatesToCalculate(base, daysFromNow) {
-  if (!daysFromNow) {
+export async function getRatesToCalculate(base, date) {
+  if (!date) {
     try {
       const res = await fetch(
         `${endpoint}/latest?base=${base}&symbols=USD,GBP,EUR,CHF`
       );
       const rates = await res.json();
-      // console.log(rates);
       return rates;
     } catch (err) {
       alert(err.message);
     }
-  } else if (daysFromNow > 0) {
-    const today = new Date();
-    const dayInThePast = new Date(today.setDate(today.getDate() - daysFromNow));
-    const queryString = Array.from(dayInThePast.toISOString())
-      .splice(0, 10)
-      .join('');
-
+  } else {
     try {
       const res = await fetch(
-        `${endpoint}/${queryString}?base=${base}&symbols=USD,GBP,EUR,CHF`
+        `${endpoint}/${date}?base=${base}&symbols=USD,GBP,EUR,CHF`
       );
       const rates = await res.json();
-      // console.log(rates);
       return rates;
     } catch (err) {
       alert(err.message);

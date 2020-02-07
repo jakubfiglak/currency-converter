@@ -6,18 +6,24 @@ export default async function calculate(from) {
   if (!ratesToCalculate[from]) {
     ratesToCalculate[from] = {};
 
-    const todayData = await getRatesToCalculate(from);
-    const yesterdayData = await getRatesToCalculate(from, 1);
+    const latestData = await getRatesToCalculate(from);
 
-    ratesToCalculate[from].today = todayData;
-    ratesToCalculate[from].yesterday = yesterdayData;
+    const date = new Date(latestData.date);
+    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
+    const dateFormatted = Array.from(dayBeforeDate.toISOString())
+      .splice(0, 10)
+      .join('');
+    const dayBeforeData = await getRatesToCalculate(from, dateFormatted);
+
+    ratesToCalculate[from].today = latestData;
+    ratesToCalculate[from].yesterday = dayBeforeData;
 
     const rateRatio = {};
-    Object.keys(todayData.rates).forEach(
+    Object.keys(latestData.rates).forEach(
       currency =>
         (rateRatio[currency] =
-          (todayData.rates[currency] - yesterdayData.rates[currency]) /
-          yesterdayData.rates[currency])
+          (latestData.rates[currency] - dayBeforeData.rates[currency]) /
+          dayBeforeData.rates[currency])
     );
 
     ratesToCalculate[from].ratio = rateRatio;

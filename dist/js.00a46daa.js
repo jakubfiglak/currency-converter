@@ -190,25 +190,19 @@ async function getRatesByBase(base) {
   }
 }
 
-async function getRatesToCalculate(base, daysFromNow) {
-  if (!daysFromNow) {
+async function getRatesToCalculate(base, date) {
+  if (!date) {
     try {
       const res = await fetch(`${endpoint}/latest?base=${base}&symbols=USD,GBP,EUR,CHF`);
-      const rates = await res.json(); // console.log(rates);
-
+      const rates = await res.json();
       return rates;
     } catch (err) {
       alert(err.message);
     }
-  } else if (daysFromNow > 0) {
-    const today = new Date();
-    const dayInThePast = new Date(today.setDate(today.getDate() - daysFromNow));
-    const queryString = Array.from(dayInThePast.toISOString()).splice(0, 10).join('');
-
+  } else {
     try {
-      const res = await fetch(`${endpoint}/${queryString}?base=${base}&symbols=USD,GBP,EUR,CHF`);
-      const rates = await res.json(); // console.log(rates);
-
+      const res = await fetch(`${endpoint}/${date}?base=${base}&symbols=USD,GBP,EUR,CHF`);
+      const rates = await res.json();
       return rates;
     } catch (err) {
       alert(err.message);
@@ -230,12 +224,15 @@ const ratesToCalculate = {};
 async function calculate(from) {
   if (!ratesToCalculate[from]) {
     ratesToCalculate[from] = {};
-    const todayData = await (0, _api.getRatesToCalculate)(from);
-    const yesterdayData = await (0, _api.getRatesToCalculate)(from, 1);
-    ratesToCalculate[from].today = todayData;
-    ratesToCalculate[from].yesterday = yesterdayData;
+    const latestData = await (0, _api.getRatesToCalculate)(from);
+    const date = new Date(latestData.date);
+    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
+    const dateFormatted = Array.from(dayBeforeDate.toISOString()).splice(0, 10).join('');
+    const dayBeforeData = await (0, _api.getRatesToCalculate)(from, dateFormatted);
+    ratesToCalculate[from].today = latestData;
+    ratesToCalculate[from].yesterday = dayBeforeData;
     const rateRatio = {};
-    Object.keys(todayData.rates).forEach(currency => rateRatio[currency] = (todayData.rates[currency] - yesterdayData.rates[currency]) / yesterdayData.rates[currency]);
+    Object.keys(latestData.rates).forEach(currency => rateRatio[currency] = (latestData.rates[currency] - dayBeforeData.rates[currency]) / dayBeforeData.rates[currency]);
     ratesToCalculate[from].ratio = rateRatio;
   }
 
