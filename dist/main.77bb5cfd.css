@@ -85,9 +85,10 @@ p {
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  justify-content: center;
   align-items: center;
+  grid-template-areas: "exchange chart" "converter converter";
 }
 
 .content {
@@ -100,6 +101,7 @@ p {
 }
 
 .exchange-rates {
+  grid-area: exchange;
   display: grid;
   grid-gap: 2rem;
 }
@@ -144,6 +146,14 @@ p {
 }
 .exchange-rates .rates-list .list-item .yesterday {
   grid-area: yesterday;
+}
+
+.rates-chart {
+  grid-area: chart;
+}
+
+.rates-converter {
+  grid-area: converter;
 }
 
 .converter {
