@@ -15,19 +15,27 @@
     </h1>
 
     <div class="container">
-      <div class="exchange-rates content">
-        <h2>Exchange rates day to day</h2>
-        <select name="currency" id="currency" class="field"></select>
-        <ul class="rates-list" id="rates-list"></ul>
-      </div>
+      <div class="content exchange-rates">
+        <h2>Exchange rates</h2>
 
-      <div class="content rates-chart">
-        <h2>Rates chart</h2>
-        <input type="date" name="from-date" id="from-date" class="field">
-        <input type="date" name="to-date" id="to-date" class="field">
+        <form class="rates" autocomplete="off">
+          <select name="currency" id="currency" class="field"></select>
+          <fieldset class="fieldset">
+            <label for="from-date">Starting date</label>
+            <input type="date" name="from-date" id="from-date" class="field">
+          </fieldset>
+          <fieldset class="fieldset">
+            <label for="to-date">End date</label>
+            <input type="date" name="to-date" id="to-date" class="field">
+          </fieldset>
+          <input type="submit" class="btn btn-primary" value="Show data">
+        </form>
+
         <div class="chart-container">
-          <canvas class="chart"></canvas>
+          <canvas id="rates-chart" class="rates-chart" width="400" height="400"></canvas>
         </div>
+
+        <ul class="rates-list" id="rates-list"></ul>
       </div>
 
       <div class="content rates-converter">
