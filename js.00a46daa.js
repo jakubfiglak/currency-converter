@@ -240,6 +240,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.convertPercent = convertPercent;
 exports.convertDate = convertDate;
+exports.getDayBeforeDate = getDayBeforeDate;
+exports.getDayAfterDate = getDayAfterDate;
+exports.createDatesArray = createDatesArray;
 
 function convertPercent(decimal) {
   return Intl.NumberFormat('en-EN', {
@@ -251,13 +254,35 @@ function convertPercent(decimal) {
 function convertDate(date) {
   return Array.from(date.toISOString()).splice(0, 10).join('');
 }
+
+function getDayBeforeDate(date) {
+  return new Date(date.setDate(date.getDate() - 1));
+}
+
+function getDayAfterDate(date) {
+  return new Date(date.setDate(date.getDate() + 1));
+}
+
+function createDatesArray(begin, end) {
+  const dates = [];
+  const dateStop = new Date(end);
+  let date = new Date(begin);
+
+  while (date <= dateStop) {
+    dates.push(convertDate(date));
+    date = getDayAfterDate(date);
+  }
+
+  return dates;
+}
 },{}],"js/calculateRates.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = calculate;
+exports.calculate = calculate;
+exports.getDataToDraw = getDataToDraw;
 
 var _api = require("./api");
 
@@ -271,7 +296,7 @@ async function calculate(from) {
     ratesToCalculate[from] = {};
     const latestData = await (0, _api.getRatesToCalculate)(from, currenciesToCompare);
     const date = new Date(latestData.date);
-    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
+    const dayBeforeDate = (0, _helpers.getDayBeforeDate)(date);
     const dateFormatted = (0, _helpers.convertDate)(dayBeforeDate);
     const dayBeforeData = await (0, _api.getRatesToCalculate)(from, currenciesToCompare, dateFormatted);
     ratesToCalculate[from].today = latestData;
@@ -282,6 +307,12 @@ async function calculate(from) {
   }
 
   return ratesToCalculate;
+}
+
+async function getDataToDraw(from, startDate, endDate) {
+  const dates = [];
+  console.log((0, _helpers.convertDate)(startDate));
+  console.log((0, _helpers.convertDate)(endDate));
 }
 },{"./api":"js/api.js","./helpers":"js/helpers.js"}],"js/displayData.js":[function(require,module,exports) {
 "use strict";
@@ -295,7 +326,7 @@ var _convert = _interopRequireDefault(require("./convert"));
 
 var _currencies = require("./currencies");
 
-var _calculateRates = _interopRequireDefault(require("./calculateRates"));
+var _calculateRates = require("./calculateRates");
 
 var _helpers = require("./helpers");
 
@@ -319,7 +350,7 @@ exports.displayConversion = displayConversion;
 
 const displayRates = async () => {
   const currency = rateSelect.value;
-  const rates = await (0, _calculateRates.default)(currency);
+  const rates = await (0, _calculateRates.calculate)(currency);
   const {
     today,
     yesterday,
@@ -21170,22 +21201,48 @@ var _chartInit = _interopRequireDefault(require("./chartInit"));
 
 var _setMaxDate = _interopRequireDefault(require("./setMaxDate"));
 
+var _calculateRates = require("./calculateRates");
+
+var _helpers = require("./helpers");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
 const ratesSelect = document.querySelector('#currency');
-const form = document.querySelector('.converter');
+const converterForm = document.querySelector('#converter');
+const ratesForm = document.querySelector('#rates');
 (0, _setMaxDate.default)();
-(0, _chartInit.default)();
+(0, _chartInit.default)(); // getDataToDraw('PLN', new Date(), new Date());
+
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
 ratesSelect.innerHTML = html;
-form.addEventListener('input', _displayData.displayConversion);
+converterForm.addEventListener('input', _displayData.displayConversion);
 
 _displayData.rateSelect.addEventListener('change', _displayData.displayRates);
-},{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js","./setMaxDate":"js/setMaxDate.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+ratesForm.addEventListener('submit', e => {
+  e.preventDefault();
+  console.log(e.target.currency.value);
+  console.log(e.target.fromDate.value);
+  console.log(e.target.toDate.value); //   const date = getDayBeforeDate(new Date(e.target.toDate.value));
+  //   const dateStr = convertDate(date);
+  //   console.log(dateStr);
+  //   const dateStop = new Date(e.target.toDate.value);
+  //   let date = new Date(e.target.fromDate.value);
+  //   const dates = [];
+  //   while (date <= dateStop) {
+  //     dates.push(convertDate(date));
+  //     date = getDayAfterDate(date);
+  //   }
+  //   console.log(dates);
+
+  const dates = (0, _helpers.createDatesArray)(e.target.fromDate.value, e.target.toDate.value);
+  console.log(dates);
+});
+},{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js","./setMaxDate":"js/setMaxDate.js","./calculateRates":"js/calculateRates.js","./helpers":"js/helpers.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -21213,7 +21270,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55990" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57710" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -18,15 +18,15 @@
       <div class="content exchange-rates">
         <h2>Exchange rates</h2>
 
-        <form class="rates" autocomplete="off">
+        <form class="rates" id="rates" autocomplete="off">
           <select name="currency" id="currency" class="field currency"></select>
           <fieldset class="fieldset from-date">
             <label for="from-date" class="form-label">Starting date</label>
-            <input type="date" name="from-date" id="from-date" class="field" min="1999-01-04">
+            <input type="date" name="fromDate" id="from-date" class="field" required="" min="1999-01-04" value="2020-02-10">
           </fieldset>
           <fieldset class="fieldset to-date">
             <label for="to-date" class="form-label">End date</label>
-            <input type="date" name="to-date" id="to-date" class="field" min="1999-01-04">
+            <input type="date" name="toDate" id="to-date" class="field" required="" min="1999-01-04" value="2020-02-10">
           </fieldset>
           <input type="submit" class="btn btn-primary show-data" value="Show data">
         </form>
@@ -35,12 +35,13 @@
           <canvas id="rates-chart" class="rates-chart" width="400" height="400"></canvas>
         </div>
 
+        <h3>Day to day changes</h3>
         <ul class="rates-list" id="rates-list"></ul>
       </div>
 
       <div class="content rates-converter">
         <h2>Convert currencies</h2>
-        <form class="converter" autocomplete="off">
+        <form class="converter" id="converter" autocomplete="off">
           <div class="input">
             <input type="number" min="0" name="from-amount" id="amount-input" class="field">
             <select name="from-currency" id="from-currency" class="field">
