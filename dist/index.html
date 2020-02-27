@@ -22,11 +22,11 @@
           <select name="currency" id="currency" class="field currency"></select>
           <fieldset class="fieldset from-date">
             <label for="from-date" class="form-label">Starting date</label>
-            <input type="date" name="from-date" id="from-date" class="field">
+            <input type="date" name="from-date" id="from-date" class="field" min="1999-01-04">
           </fieldset>
           <fieldset class="fieldset to-date">
             <label for="to-date" class="form-label">End date</label>
-            <input type="date" name="to-date" id="to-date" class="field">
+            <input type="date" name="to-date" id="to-date" class="field" min="1999-01-04">
           </fieldset>
           <input type="submit" class="btn btn-primary show-data" value="Show data">
         </form>

@@ -1,4 +1,5 @@
 import { getRatesToCalculate } from './api';
+import { convertDate } from './helpers';
 
 const ratesToCalculate = {};
 
@@ -10,9 +11,10 @@ export default async function calculate(from) {
 
     const date = new Date(latestData.date);
     const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
-    const dateFormatted = Array.from(dayBeforeDate.toISOString())
-      .splice(0, 10)
-      .join('');
+    // const dateFormatted = Array.from(dayBeforeDate.toISOString())
+    //   .splice(0, 10)
+    //   .join('');
+    const dateFormatted = convertDate(dayBeforeDate);
     const dayBeforeData = await getRatesToCalculate(from, dateFormatted);
 
     ratesToCalculate[from].today = latestData;
