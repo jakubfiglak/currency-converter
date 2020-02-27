@@ -190,10 +190,12 @@ async function getRatesByBase(base) {
   }
 }
 
-async function getRatesToCalculate(base, date) {
+async function getRatesToCalculate(base, currencies, date) {
+  const symbolsString = currencies.join(',');
+
   if (!date) {
     try {
-      const res = await fetch(`${endpoint}/latest?base=${base}&symbols=USD,GBP,EUR,CHF`);
+      const res = await fetch(`${endpoint}/latest?base=${base}&symbols=${symbolsString}`);
       const rates = await res.json();
       return rates;
     } catch (err) {
@@ -201,7 +203,7 @@ async function getRatesToCalculate(base, date) {
     }
   } else {
     try {
-      const res = await fetch(`${endpoint}/${date}?base=${base}&symbols=USD,GBP,EUR,CHF`);
+      const res = await fetch(`${endpoint}/${date}?base=${base}&symbols=${symbolsString}`);
       const rates = await res.json();
       return rates;
     } catch (err) {
@@ -262,18 +264,16 @@ var _api = require("./api");
 var _helpers = require("./helpers");
 
 const ratesToCalculate = {};
+const currenciesToCompare = ['USD', 'GBP', 'EUR', 'CHF'];
 
 async function calculate(from) {
   if (!ratesToCalculate[from]) {
     ratesToCalculate[from] = {};
-    const latestData = await (0, _api.getRatesToCalculate)(from);
+    const latestData = await (0, _api.getRatesToCalculate)(from, currenciesToCompare);
     const date = new Date(latestData.date);
-    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1)); // const dateFormatted = Array.from(dayBeforeDate.toISOString())
-    //   .splice(0, 10)
-    //   .join('');
-
+    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
     const dateFormatted = (0, _helpers.convertDate)(dayBeforeDate);
-    const dayBeforeData = await (0, _api.getRatesToCalculate)(from, dateFormatted);
+    const dayBeforeData = await (0, _api.getRatesToCalculate)(from, currenciesToCompare, dateFormatted);
     ratesToCalculate[from].today = latestData;
     ratesToCalculate[from].yesterday = dayBeforeData;
     const rateRatio = {};

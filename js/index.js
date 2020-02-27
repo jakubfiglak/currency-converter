@@ -11,7 +11,9 @@ const form = document.querySelector('.converter');
 
 setMaxDate();
 chartInit();
+
 const html = generateOptions();
+
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
 ratesSelect.innerHTML = html;
