@@ -230,7 +230,26 @@ async function convert(amount, from, to) {
   const rate = ratesByBase[from].rates[to];
   return amount * rate;
 }
-},{"./api":"js/api.js"}],"js/calculateRates.js":[function(require,module,exports) {
+},{"./api":"js/api.js"}],"js/helpers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.convertPercent = convertPercent;
+exports.convertDate = convertDate;
+
+function convertPercent(decimal) {
+  return Intl.NumberFormat('en-EN', {
+    style: 'percent',
+    minimumFractionDigits: 2
+  }).format(decimal);
+}
+
+function convertDate(date) {
+  return Array.from(date.toISOString()).splice(0, 10).join('');
+}
+},{}],"js/calculateRates.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -240,6 +259,8 @@ exports.default = calculate;
 
 var _api = require("./api");
 
+var _helpers = require("./helpers");
+
 const ratesToCalculate = {};
 
 async function calculate(from) {
@@ -247,8 +268,11 @@ async function calculate(from) {
     ratesToCalculate[from] = {};
     const latestData = await (0, _api.getRatesToCalculate)(from);
     const date = new Date(latestData.date);
-    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
-    const dateFormatted = Array.from(dayBeforeDate.toISOString()).splice(0, 10).join('');
+    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1)); // const dateFormatted = Array.from(dayBeforeDate.toISOString())
+    //   .splice(0, 10)
+    //   .join('');
+
+    const dateFormatted = (0, _helpers.convertDate)(dayBeforeDate);
     const dayBeforeData = await (0, _api.getRatesToCalculate)(from, dateFormatted);
     ratesToCalculate[from].today = latestData;
     ratesToCalculate[from].yesterday = dayBeforeData;
@@ -259,21 +283,7 @@ async function calculate(from) {
 
   return ratesToCalculate;
 }
-},{"./api":"js/api.js"}],"js/helpers.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.convertPercent = convertPercent;
-
-function convertPercent(decimal) {
-  return Intl.NumberFormat('en-EN', {
-    style: 'percent',
-    minimumFractionDigits: 2
-  }).format(decimal);
-}
-},{}],"js/displayData.js":[function(require,module,exports) {
+},{"./api":"js/api.js","./helpers":"js/helpers.js"}],"js/displayData.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21131,7 +21141,25 @@ function chartInit() {
     }
   });
 }
-},{"chart.js":"node_modules/chart.js/dist/Chart.js"}],"js/index.js":[function(require,module,exports) {
+},{"chart.js":"node_modules/chart.js/dist/Chart.js"}],"js/setMaxDate.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = setMaxDate;
+
+var _helpers = require("./helpers");
+
+const fromDateInput = document.querySelector('#from-date');
+const toDateInput = document.querySelector('#to-date');
+
+function setMaxDate() {
+  const date = (0, _helpers.convertDate)(new Date());
+  fromDateInput.setAttribute('max', `${date}`);
+  toDateInput.setAttribute('max', `${date}`);
+}
+},{"./helpers":"js/helpers.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _currencies = require("./currencies");
@@ -21140,12 +21168,15 @@ var _displayData = require("./displayData");
 
 var _chartInit = _interopRequireDefault(require("./chartInit"));
 
+var _setMaxDate = _interopRequireDefault(require("./setMaxDate"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
 const ratesSelect = document.querySelector('#currency');
 const form = document.querySelector('.converter');
+(0, _setMaxDate.default)();
 (0, _chartInit.default)();
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
@@ -21154,7 +21185,7 @@ ratesSelect.innerHTML = html;
 form.addEventListener('input', _displayData.displayConversion);
 
 _displayData.rateSelect.addEventListener('change', _displayData.displayRates);
-},{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js","./setMaxDate":"js/setMaxDate.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
