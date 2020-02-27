@@ -1,6 +1,6 @@
 import convert from './convert';
 import { formatCurrency } from './currencies';
-import calculate from './calculateRates';
+import { calculate } from './calculateRates';
 import { convertPercent } from './helpers';
 
 const amountInput = document.querySelector('#amount-input');
