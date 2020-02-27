@@ -22,16 +22,20 @@
         <h2>Exchange rates</h2>
 
         <form class="rates" autocomplete="off">
-          <select name="currency" id="currency" class="field"></select>
-          <fieldset class="fieldset">
-            <label for="from-date">Starting date</label>
+          <select name="currency" id="currency" class="field currency"></select>
+          <fieldset class="fieldset from-date">
+            <label for="from-date" class="form-label">Starting date</label>
             <input type="date" name="from-date" id="from-date" class="field" />
           </fieldset>
-          <fieldset class="fieldset">
-            <label for="to-date">End date</label>
+          <fieldset class="fieldset to-date">
+            <label for="to-date" class="form-label">End date</label>
             <input type="date" name="to-date" id="to-date" class="field" />
           </fieldset>
-          <input type="submit" class="btn btn-primary" value="Show data" />
+          <input
+            type="submit"
+            class="btn btn-primary show-data"
+            value="Show data"
+          />
         </form>
 
         <div class="chart-container">
