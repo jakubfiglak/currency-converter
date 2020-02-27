@@ -89,6 +89,8 @@ p {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .content {
@@ -103,6 +105,39 @@ p {
 .exchange-rates {
   display: grid;
   grid-gap: 2rem;
+}
+.exchange-rates .rates {
+  display: grid;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  grid-template-areas: "currency currency" "start-date end-date" "button button";
+}
+.exchange-rates .rates .currency {
+  grid-area: currency;
+}
+.exchange-rates .rates .fieldset {
+  border: 0;
+}
+.exchange-rates .rates .fieldset .form-label {
+  font-size: 1.2rem;
+  margin-inline-end: 1rem;
+}
+.exchange-rates .rates .from-date {
+  grid-area: start-date;
+}
+.exchange-rates .rates .to-date {
+  grid-area: end-date;
+}
+.exchange-rates .rates .show-data {
+  grid-area: button;
+  width: 20rem;
+  justify-self: center;
+}
+.exchange-rates .chart-container {
+  width: 50%;
+  margin: 0 auto;
 }
 .exchange-rates .rates-list {
   font-size: 1.4rem;
