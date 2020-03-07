@@ -21178,11 +21178,6 @@ function chartInit() {
     options: {
       tooltips: {
         mode: 'x'
-      },
-      scales: {
-        yAxes: [{
-          stacked: true
-        }]
       }
     }
   });
@@ -21214,12 +21209,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.prepareDataToDraw = prepareDataToDraw;
+exports.drawChart = drawChart;
 
 var _currencies = require("./currencies");
 
 var _api = require("./api");
 
 var _helpers = require("./helpers");
+
+var _chartInit = _interopRequireDefault(require("./chartInit"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const ratesForm = document.querySelector('#rates');
 
@@ -21242,9 +21242,30 @@ async function prepareDataToDraw() {
       chartData[currency][key] = orderedDayByDayData[key][currency];
     });
   });
-  console.log(chartData);
+  return chartData;
 }
-},{"./currencies":"js/currencies.js","./api":"js/api.js","./helpers":"js/helpers.js"}],"js/index.js":[function(require,module,exports) {
+
+async function drawChart() {
+  const myChart = (0, _chartInit.default)();
+  const data = await prepareDataToDraw();
+  const colors = ['#30363d', '#f27a54', '#a154f2', '#6fcf97']; // Set chart labels (X axis)
+
+  myChart.data.labels = Object.keys(data.USD);
+
+  _currencies.currenciesToCompare.forEach((currency, idx) => {
+    myChart.data.datasets[idx] = {
+      data: Object.values(data[currency]),
+      label: currency,
+      borderColor: colors[idx]
+    };
+  });
+
+  myChart.update({
+    duration: 800,
+    easing: 'easeOutBounce'
+  });
+}
+},{"./currencies":"js/currencies.js","./api":"js/api.js","./helpers":"js/helpers.js","./chartInit":"js/chartInit.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _currencies = require("./currencies");
@@ -21276,7 +21297,7 @@ _displayData.rateSelect.addEventListener('change', _displayData.displayRates);
 
 ratesForm.addEventListener('submit', e => {
   e.preventDefault();
-  (0, _drawChart.prepareDataToDraw)();
+  (0, _drawChart.drawChart)();
 });
 },{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js","./setMaxDate":"js/setMaxDate.js","./drawChart":"js/drawChart.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
