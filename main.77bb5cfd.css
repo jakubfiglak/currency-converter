@@ -182,6 +182,10 @@ p {
   grid-area: yesterday;
 }
 
+.rates-converter {
+  margin-block-end: 5rem;
+}
+
 .converter {
   display: grid;
   grid-template-columns: 1fr;
@@ -218,6 +222,20 @@ p {
 }
 .field:focus {
   outline-color: #f27a54;
+}
+
+.text {
+  color: #f27a54;
+  text-align: center;
+  padding: 2rem;
+}
+.text-link {
+  color: #f27a54;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.text-link:hover {
+  color: #a154f2;
 }
 
 /*# sourceMappingURL=/main.77bb5cfd.css.map */
