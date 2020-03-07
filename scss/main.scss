@@ -121,6 +121,10 @@
   }
 }
 
+.rates-converter {
+  margin-block-end: 5rem;
+}
+
 .converter {
   display: grid;
   grid-template-columns: 1fr;
@@ -158,5 +162,21 @@
 
   &:focus {
     outline-color: $primary-color;
+  }
+}
+
+.text {
+  color: $primary-color;
+  text-align: center;
+  padding: 2rem;
+
+  &-link {
+    color: $primary-color;
+    text-decoration: none;
+    transition: all 0.3s;
+
+    &:hover {
+      color: $secondary-color;
+    }
   }
 }
