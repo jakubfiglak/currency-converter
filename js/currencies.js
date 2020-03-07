@@ -34,6 +34,8 @@ const currencies = {
   EUR: 'Euro',
 };
 
+export const currenciesToCompare = ['USD', 'GBP', 'EUR', 'CHF'];
+
 export const generateOptions = () =>
   Object.entries(currencies)
     .map(

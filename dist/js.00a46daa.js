@@ -123,7 +123,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.formatCurrency = exports.generateOptions = void 0;
+exports.formatCurrency = exports.generateOptions = exports.currenciesToCompare = void 0;
 const currencies = {
   USD: 'United States Dollar',
   AUD: 'Australian Dollar',
@@ -159,6 +159,8 @@ const currencies = {
   ZAR: 'South African Rand',
   EUR: 'Euro'
 };
+const currenciesToCompare = ['USD', 'GBP', 'EUR', 'CHF'];
+exports.currenciesToCompare = currenciesToCompare;
 
 const generateOptions = () => Object.entries(currencies).map(([currencyCode, currencyName]) => `<option value="${currencyCode}">${currencyCode} - ${currencyName}</option>`).join('');
 
@@ -178,7 +180,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getRatesByBase = getRatesByBase;
 exports.getRatesToCalculate = getRatesToCalculate;
-const endpoint = 'https://api.exchangeratesapi.io';
+exports.getRatesTimePeriod = getRatesTimePeriod;
+const endpoint = 'https://api.exchangeratesapi.io'; // Fetch latest rates by base currency
 
 async function getRatesByBase(base) {
   try {
@@ -188,7 +191,8 @@ async function getRatesByBase(base) {
   } catch (err) {
     alert(err.message);
   }
-}
+} // Fetch rates in comparison with certain currencies at certain date
+
 
 async function getRatesToCalculate(base, currencies, date) {
   const symbolsString = currencies.join(',');
@@ -209,6 +213,19 @@ async function getRatesToCalculate(base, currencies, date) {
     } catch (err) {
       alert(err.message);
     }
+  }
+} // Fetch historical rates in comparison with certain currencies for a time period
+
+
+async function getRatesTimePeriod(base, currencies, startDate, endDate) {
+  const symbolsString = currencies.join(',');
+
+  try {
+    const res = await fetch(`${endpoint}/history?start_at=${startDate}&end_at=${endDate}&base=${base}&symbols=${symbolsString}`);
+    const rates = await res.json();
+    return rates;
+  } catch (err) {
+    alert(err.message);
   }
 }
 },{}],"js/convert.js":[function(require,module,exports) {
@@ -242,7 +259,7 @@ exports.convertPercent = convertPercent;
 exports.convertDate = convertDate;
 exports.getDayBeforeDate = getDayBeforeDate;
 exports.getDayAfterDate = getDayAfterDate;
-exports.createDatesArray = createDatesArray;
+exports.sortObject = sortObject;
 
 function convertPercent(decimal) {
   return Intl.NumberFormat('en-EN', {
@@ -261,19 +278,23 @@ function getDayBeforeDate(date) {
 
 function getDayAfterDate(date) {
   return new Date(date.setDate(date.getDate() + 1));
-}
+} // export function createDatesArray(begin, end) {
+//   const dates = [];
+//   const dateStop = new Date(end);
+//   let date = new Date(begin);
+//   while (date <= dateStop) {
+//     dates.push(convertDate(date));
+//     date = getDayAfterDate(date);
+//   }
+//   return dates;
+// }
+// Function to sort the API response object by date (key)
 
-function createDatesArray(begin, end) {
-  const dates = [];
-  const dateStop = new Date(end);
-  let date = new Date(begin);
 
-  while (date <= dateStop) {
-    dates.push(convertDate(date));
-    date = getDayAfterDate(date);
-  }
-
-  return dates;
+function sortObject(unordered) {
+  const ordered = {};
+  Object.keys(unordered).sort().forEach(key => ordered[key] = unordered[key]);
+  return ordered;
 }
 },{}],"js/calculateRates.js":[function(require,module,exports) {
 "use strict";
@@ -282,23 +303,23 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.calculate = calculate;
-exports.getDataToDraw = getDataToDraw;
 
 var _api = require("./api");
 
 var _helpers = require("./helpers");
 
+var _currencies = require("./currencies");
+
 const ratesToCalculate = {};
-const currenciesToCompare = ['USD', 'GBP', 'EUR', 'CHF'];
 
 async function calculate(from) {
   if (!ratesToCalculate[from]) {
     ratesToCalculate[from] = {};
-    const latestData = await (0, _api.getRatesToCalculate)(from, currenciesToCompare);
+    const latestData = await (0, _api.getRatesToCalculate)(from, _currencies.currenciesToCompare);
     const date = new Date(latestData.date);
     const dayBeforeDate = (0, _helpers.getDayBeforeDate)(date);
     const dateFormatted = (0, _helpers.convertDate)(dayBeforeDate);
-    const dayBeforeData = await (0, _api.getRatesToCalculate)(from, currenciesToCompare, dateFormatted);
+    const dayBeforeData = await (0, _api.getRatesToCalculate)(from, _currencies.currenciesToCompare, dateFormatted);
     ratesToCalculate[from].today = latestData;
     ratesToCalculate[from].yesterday = dayBeforeData;
     const rateRatio = {};
@@ -308,13 +329,7 @@ async function calculate(from) {
 
   return ratesToCalculate;
 }
-
-async function getDataToDraw(from, startDate, endDate) {
-  const dates = [];
-  console.log((0, _helpers.convertDate)(startDate));
-  console.log((0, _helpers.convertDate)(endDate));
-}
-},{"./api":"js/api.js","./helpers":"js/helpers.js"}],"js/displayData.js":[function(require,module,exports) {
+},{"./api":"js/api.js","./helpers":"js/helpers.js","./currencies":"js/currencies.js"}],"js/displayData.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21188,9 +21203,48 @@ const toDateInput = document.querySelector('#to-date');
 function setMaxDate() {
   const date = (0, _helpers.convertDate)(new Date());
   fromDateInput.setAttribute('max', `${date}`);
+  fromDateInput.setAttribute('value', `${date}`);
   toDateInput.setAttribute('max', `${date}`);
+  toDateInput.setAttribute('value', `${date}`);
 }
-},{"./helpers":"js/helpers.js"}],"js/index.js":[function(require,module,exports) {
+},{"./helpers":"js/helpers.js"}],"js/drawChart.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.prepareDataToDraw = prepareDataToDraw;
+
+var _currencies = require("./currencies");
+
+var _api = require("./api");
+
+var _helpers = require("./helpers");
+
+const ratesForm = document.querySelector('#rates');
+
+async function prepareDataToDraw() {
+  const startDate = ratesForm.fromDate.value;
+  const endDate = ratesForm.toDate.value;
+  const base = ratesForm.currency.value; // Prepare data structure
+
+  const chartData = {};
+
+  _currencies.currenciesToCompare.forEach(currency => chartData[currency] = {}); // Fetch data from an API based on users input
+
+
+  const dayByDayData = await (0, _api.getRatesTimePeriod)(base, _currencies.currenciesToCompare, startDate, endDate); // Sort the data by date
+
+  const orderedDayByDayData = (0, _helpers.sortObject)(dayByDayData.rates); // Create a seperate object for each currency
+
+  Object.keys(orderedDayByDayData).forEach(key => {
+    _currencies.currenciesToCompare.forEach(currency => {
+      chartData[currency][key] = orderedDayByDayData[key][currency];
+    });
+  });
+  console.log(chartData);
+}
+},{"./currencies":"js/currencies.js","./api":"js/api.js","./helpers":"js/helpers.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 var _currencies = require("./currencies");
@@ -21201,9 +21255,7 @@ var _chartInit = _interopRequireDefault(require("./chartInit"));
 
 var _setMaxDate = _interopRequireDefault(require("./setMaxDate"));
 
-var _calculateRates = require("./calculateRates");
-
-var _helpers = require("./helpers");
+var _drawChart = require("./drawChart");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21213,8 +21265,7 @@ const ratesSelect = document.querySelector('#currency');
 const converterForm = document.querySelector('#converter');
 const ratesForm = document.querySelector('#rates');
 (0, _setMaxDate.default)();
-(0, _chartInit.default)(); // getDataToDraw('PLN', new Date(), new Date());
-
+(0, _chartInit.default)();
 const html = (0, _currencies.generateOptions)();
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
@@ -21225,24 +21276,9 @@ _displayData.rateSelect.addEventListener('change', _displayData.displayRates);
 
 ratesForm.addEventListener('submit', e => {
   e.preventDefault();
-  console.log(e.target.currency.value);
-  console.log(e.target.fromDate.value);
-  console.log(e.target.toDate.value); //   const date = getDayBeforeDate(new Date(e.target.toDate.value));
-  //   const dateStr = convertDate(date);
-  //   console.log(dateStr);
-  //   const dateStop = new Date(e.target.toDate.value);
-  //   let date = new Date(e.target.fromDate.value);
-  //   const dates = [];
-  //   while (date <= dateStop) {
-  //     dates.push(convertDate(date));
-  //     date = getDayAfterDate(date);
-  //   }
-  //   console.log(dates);
-
-  const dates = (0, _helpers.createDatesArray)(e.target.fromDate.value, e.target.toDate.value);
-  console.log(dates);
+  (0, _drawChart.prepareDataToDraw)();
 });
-},{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js","./setMaxDate":"js/setMaxDate.js","./calculateRates":"js/calculateRates.js","./helpers":"js/helpers.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./currencies":"js/currencies.js","./displayData":"js/displayData.js","./chartInit":"js/chartInit.js","./setMaxDate":"js/setMaxDate.js","./drawChart":"js/drawChart.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -21270,7 +21306,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57710" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51874" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

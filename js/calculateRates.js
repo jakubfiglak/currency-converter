@@ -1,8 +1,8 @@
 import { getRatesToCalculate } from './api';
 import { convertDate, getDayBeforeDate } from './helpers';
+import { currenciesToCompare } from './currencies';
 
 const ratesToCalculate = {};
-const currenciesToCompare = ['USD', 'GBP', 'EUR', 'CHF'];
 
 export async function calculate(from) {
   if (!ratesToCalculate[from]) {
@@ -33,10 +33,4 @@ export async function calculate(from) {
     ratesToCalculate[from].ratio = rateRatio;
   }
   return ratesToCalculate;
-}
-
-export async function getDataToDraw(from, startDate, endDate) {
-  const dates = [];
-  console.log(convertDate(startDate));
-  console.log(convertDate(endDate));
 }

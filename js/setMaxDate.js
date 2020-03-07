@@ -6,5 +6,7 @@ const toDateInput = document.querySelector('#to-date');
 export default function setMaxDate() {
   const date = convertDate(new Date());
   fromDateInput.setAttribute('max', `${date}`);
+  fromDateInput.setAttribute('value', `${date}`);
   toDateInput.setAttribute('max', `${date}`);
+  toDateInput.setAttribute('value', `${date}`);
 }
