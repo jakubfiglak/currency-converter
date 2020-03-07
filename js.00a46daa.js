@@ -353,6 +353,7 @@ const amountOutput = document.querySelector('#amount-output');
 const toSelect = document.querySelector('#to-currency');
 const fromSelect = document.querySelector('#from-currency');
 const ratesList = document.querySelector('#rates-list');
+const ratesForm = document.querySelector('#rates');
 const rateSelect = document.querySelector('#currency');
 exports.rateSelect = rateSelect;
 
@@ -365,7 +366,7 @@ const displayConversion = async () => {
 exports.displayConversion = displayConversion;
 
 const displayRates = async () => {
-  const currency = rateSelect.value;
+  const currency = ratesForm.currency.value;
   const rates = await (0, _calculateRates.calculate)(currency);
   const {
     today,
@@ -21291,9 +21292,7 @@ fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
 ratesSelect.innerHTML = html;
 converterForm.addEventListener('input', _displayData.displayConversion);
-
-_displayData.rateSelect.addEventListener('change', _displayData.displayRates);
-
+ratesForm.addEventListener('submit', _displayData.displayRates);
 ratesForm.addEventListener('submit', e => {
   e.preventDefault();
   (0, _drawChart.drawChart)();
@@ -21326,7 +21325,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50428" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51349" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
