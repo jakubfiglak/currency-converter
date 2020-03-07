@@ -2,7 +2,7 @@ import { generateOptions } from './currencies';
 import { displayConversion, rateSelect, displayRates } from './displayData';
 import chartInit from './chartInit';
 import setMaxDate from './setMaxDate';
-import { prepareDataToDraw } from './drawChart';
+import { prepareDataToDraw, drawChart } from './drawChart';
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
@@ -25,5 +25,5 @@ rateSelect.addEventListener('change', displayRates);
 
 ratesForm.addEventListener('submit', e => {
   e.preventDefault();
-  prepareDataToDraw();
+  drawChart();
 });

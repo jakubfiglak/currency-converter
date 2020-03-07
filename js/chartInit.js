@@ -21,13 +21,6 @@ export default function chartInit() {
       tooltips: {
         mode: 'x',
       },
-      scales: {
-        yAxes: [
-          {
-            stacked: true,
-          },
-        ],
-      },
     },
   });
 }
