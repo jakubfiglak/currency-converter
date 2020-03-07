@@ -8,6 +8,7 @@ const amountOutput = document.querySelector('#amount-output');
 const toSelect = document.querySelector('#to-currency');
 const fromSelect = document.querySelector('#from-currency');
 const ratesList = document.querySelector('#rates-list');
+const ratesForm = document.querySelector('#rates');
 
 export const rateSelect = document.querySelector('#currency');
 
@@ -22,7 +23,7 @@ export const displayConversion = async () => {
 };
 
 export const displayRates = async () => {
-  const currency = rateSelect.value;
+  const currency = ratesForm.currency.value;
   const rates = await calculate(currency);
 
   const { today, yesterday, ratio } = rates[currency];
