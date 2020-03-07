@@ -1,25 +1,29 @@
 import { generateOptions } from './currencies';
-import calculate from './calculateRates';
-import { convertPercent } from './helpers';
 import { displayConversion, rateSelect, displayRates } from './displayData';
+import chartInit from './chartInit';
+import setMaxDate from './setMaxDate';
+import { prepareDataToDraw, drawChart } from './drawChart';
 
 const fromSelect = document.querySelector('#from-currency');
 const toSelect = document.querySelector('#to-currency');
 const ratesSelect = document.querySelector('#currency');
 
-const form = document.querySelector('.converter');
+const converterForm = document.querySelector('#converter');
+const ratesForm = document.querySelector('#rates');
 
-// getRatesByBase('PLN');
-// getRatesToCalculate('PLN', 1);
-// calculate('PLN', 1);
-// calculate('PLN', 1);
-// calculate('USD', 1);
-// const percent = convertPercent(0.007576);
-// console.log(percent);
+setMaxDate();
+chartInit();
+
 const html = generateOptions();
+
 fromSelect.innerHTML = html;
 toSelect.innerHTML = html;
 ratesSelect.innerHTML = html;
 
-form.addEventListener('input', displayConversion);
+converterForm.addEventListener('input', displayConversion);
 rateSelect.addEventListener('change', displayRates);
+
+ratesForm.addEventListener('submit', e => {
+  e.preventDefault();
+  drawChart();
+});

@@ -1,19 +1,23 @@
 import { getRatesToCalculate } from './api';
+import { convertDate, getDayBeforeDate } from './helpers';
+import { currenciesToCompare } from './currencies';
 
 const ratesToCalculate = {};
 
-export default async function calculate(from) {
+export async function calculate(from) {
   if (!ratesToCalculate[from]) {
     ratesToCalculate[from] = {};
 
-    const latestData = await getRatesToCalculate(from);
+    const latestData = await getRatesToCalculate(from, currenciesToCompare);
 
     const date = new Date(latestData.date);
-    const dayBeforeDate = new Date(date.setDate(date.getDate() - 1));
-    const dateFormatted = Array.from(dayBeforeDate.toISOString())
-      .splice(0, 10)
-      .join('');
-    const dayBeforeData = await getRatesToCalculate(from, dateFormatted);
+    const dayBeforeDate = getDayBeforeDate(date);
+    const dateFormatted = convertDate(dayBeforeDate);
+    const dayBeforeData = await getRatesToCalculate(
+      from,
+      currenciesToCompare,
+      dateFormatted
+    );
 
     ratesToCalculate[from].today = latestData;
     ratesToCalculate[from].yesterday = dayBeforeData;

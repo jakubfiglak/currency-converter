@@ -5,7 +5,10 @@
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .content {
@@ -13,13 +16,56 @@
   padding: 2rem 5rem;
   box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
-  max-width: 90%;
+  width: 90%;
   margin-block-start: 3rem;
 }
 
 .exchange-rates {
   display: grid;
   grid-gap: 2rem;
+
+  .rates {
+    display: grid;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    grid-template-areas:
+      'currency currency'
+      'start-date end-date'
+      'button button';
+
+    .currency {
+      grid-area: currency;
+    }
+
+    .fieldset {
+      border: 0;
+
+      .form-label {
+        font-size: 1.2rem;
+        margin-inline-end: 1rem;
+      }
+    }
+
+    .from-date {
+      grid-area: start-date;
+    }
+
+    .to-date {
+      grid-area: end-date;
+    }
+    .show-data {
+      grid-area: button;
+      width: 20rem;
+      justify-self: center;
+    }
+  }
+
+  .chart-container {
+    width: 50%;
+    margin: 0 auto;
+  }
 
   .rates-list {
     font-size: 1.4rem;
@@ -75,6 +121,10 @@
   }
 }
 
+.rates-converter {
+  margin-block-end: 5rem;
+}
+
 .converter {
   display: grid;
   grid-template-columns: 1fr;
@@ -112,5 +162,21 @@
 
   &:focus {
     outline-color: $primary-color;
+  }
+}
+
+.text {
+  color: $primary-color;
+  text-align: center;
+  padding: 2rem;
+
+  &-link {
+    color: $primary-color;
+    text-decoration: none;
+    transition: all 0.3s;
+
+    &:hover {
+      color: $secondary-color;
+    }
   }
 }
