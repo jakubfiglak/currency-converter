@@ -21,7 +21,7 @@ toSelect.innerHTML = html;
 ratesSelect.innerHTML = html;
 
 converterForm.addEventListener('input', displayConversion);
-rateSelect.addEventListener('change', displayRates);
+rateSelect.addEventListener('submit', displayRates);
 
 ratesForm.addEventListener('submit', e => {
   e.preventDefault();
