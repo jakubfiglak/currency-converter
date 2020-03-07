@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html --public-url ./",
-    "deploy": "git subtree push --prefix dist origin gh-pages"
+    "build": "parcel build index.html --public-url ./"
   },
   "author": "",
   "license": "ISC",
