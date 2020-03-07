@@ -13,7 +13,6 @@
 
 .content {
   background: $dark-gray;
-  padding: 2rem 5rem;
   box-shadow: 0px 30px 40px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   width: 90%;
@@ -22,7 +21,12 @@
 
 .exchange-rates {
   display: grid;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  justify-items: center;
   grid-gap: 2rem;
+  padding: 2rem 0;
 
   .rates {
     display: grid;
@@ -30,6 +34,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    max-width: 90%;
     grid-template-areas:
       'currency currency'
       'start-date end-date'
@@ -63,8 +68,23 @@
   }
 
   .chart-container {
-    width: 50%;
+    width: 600px;
     margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media screen and (max-width: 768px) {
+      width: 400px;
+    }
+
+    @media screen and (max-width: 411px) {
+      width: 300px;
+    }
+
+    @media screen and (max-width: 320px) {
+      width: 250px;
+    }
   }
 
   .rates-list {
@@ -123,6 +143,7 @@
 
 .rates-converter {
   margin-block-end: 5rem;
+  padding: 2rem 5rem;
 }
 
 .converter {
