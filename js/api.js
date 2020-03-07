@@ -1,3 +1,5 @@
+import { filterCurrencies } from './helpers';
+
 const endpoint = 'https://api.exchangeratesapi.io';
 
 // Fetch latest rates by base currency
@@ -12,10 +14,12 @@ export async function getRatesByBase(base) {
   }
 }
 
-// Fetch rates in comparison with certain currencies at certain date
+// Fetch rates in comparison with certain currencies for a certain date
 
 export async function getRatesToCalculate(base, currencies, date) {
-  const symbolsString = currencies.join(',');
+  const filteredCurrencies = filterCurrencies(base, currencies);
+
+  const symbolsString = filteredCurrencies.join(',');
 
   if (!date) {
     try {
@@ -40,10 +44,12 @@ export async function getRatesToCalculate(base, currencies, date) {
   }
 }
 
-// Fetch historical rates in comparison with certain currencies for a time period
+// Fetch historical rates in comparison to certain currencies for a time period
 
 export async function getRatesTimePeriod(base, currencies, startDate, endDate) {
-  const symbolsString = currencies.join(',');
+  const filteredCurrencies = filterCurrencies(base, currencies);
+
+  const symbolsString = filteredCurrencies.join(',');
 
   try {
     const res = await fetch(

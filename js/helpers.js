@@ -19,20 +19,6 @@ export function getDayAfterDate(date) {
   return new Date(date.setDate(date.getDate() + 1));
 }
 
-// export function createDatesArray(begin, end) {
-//   const dates = [];
-
-//   const dateStop = new Date(end);
-//   let date = new Date(begin);
-
-//   while (date <= dateStop) {
-//     dates.push(convertDate(date));
-//     date = getDayAfterDate(date);
-//   }
-
-//   return dates;
-// }
-
 // Function to sort the API response object by date (key)
 
 export function sortObject(unordered) {
@@ -41,4 +27,10 @@ export function sortObject(unordered) {
     .sort()
     .forEach(key => (ordered[key] = unordered[key]));
   return ordered;
+}
+
+// Filter currencies to avoid fetching data comparing the same currency
+
+export function filterCurrencies(base, currencies) {
+  return currencies.filter(currency => currency !== base);
 }
